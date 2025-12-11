@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Collector - Star Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cosmic-bg">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+    </div>
+    
+    <div class="game-container">
+        <div class="game-header">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <h1>COSMIC COLLECTOR</h1>
+            </div>
+            <div class="subtitle">Collect stellar energy across the galaxy!</div>
+        </div>
+
+        <div class="game-stats">
+            <div class="stat-card time-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">TIME REMAINING</div>
+                    <div class="stat-value">
+                        <span id="time">60</span><span class="unit">s</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="timeProgress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card score-card">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">STELLAR ENERGY</div>
+                    <div class="stat-value">
+                        <span id="score">0</span><span class="unit">/10</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="scoreProgress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card power-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">WARP SPEED</div>
+                    <div class="stat-value">
+                        <span id="speed">3</span><span class="unit">x</span>
+                    </div>
+                    <div class="speed-indicators">
+                        <div class="speed-dot active"></div>
+                        <div class="speed-dot active"></div>
+                        <div class="speed-dot active"></div>
+                        <div class="speed-dot"></div>
+                        <div class="speed-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-main">
+            <div class="game-canvas-container">
+                <canvas id="gameCanvas"></canvas>
+                <div class="game-overlay start-overlay" id="startScreen">
+                    <div class="overlay-content">
+                        <div class="welcome-animation">
+                            <div class="pulse-ring"></div>
+                            <div class="pulse-ring delay-1"></div>
+                            <i class="fas fa-rocket launch-icon"></i>
+                        </div>
+                        <h2 class="game-title">COSMIC COLLECTOR</h2>
+                        <p class="game-description">Navigate through space and collect stellar energy before time runs out!</p>
+                        
+                        <div class="mission-brief">
+                            <div class="mission-item">
+                                <i class="fas fa-bullseye"></i>
+                                <span>Mission: Collect 10 energy stars</span>
+                            </div>
+                            <div class="mission-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Time Limit: 60 seconds</span>
+                            </div>
+                            <div class="mission-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Use Warp Boost for speed</span>
+                            </div>
+                        </div>
+
+                        <div class="control-scheme">
+                            <h3><i class="fas fa-gamepad"></i> Control Scheme</h3>
+                            <div class="controls-grid">
+                                <div class="control-key">
+                                    <kbd><i class="fas fa-arrow-up"></i></kbd>
+                                    <span>Move Up</span>
+                                </div>
+                                <div class="control-key">
+                                    <kbd><i class="fas fa-arrow-down"></i></kbd>
+                                    <span>Move Down</span>
+                                </div>
+                                <div class="control-key">
+                                    <kbd><i class="fas fa-arrow-left"></i></kbd>
+                                    <span>Move Left</span>
+                                </div>
+                                <div class="control-key">
+                                    <kbd><i class="fas fa-arrow-right"></i></kbd>
+                                    <span>Move Right</span>
+                                </div>
+                                <div class="control-key wide">
+                                    <kbd>SPACE</kbd>
+                                    <span>Warp Boost</span>
+                                </div>
+                                <div class="control-key">
+                                    <kbd>P</kbd>
+                                    <span>Pause</span>
+                                </div>
+                                <div class="control-key">
+                                    <kbd>R</kbd>
+                                    <span>Restart</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="launch-btn" id="startButton">
+                            <i class="fas fa-play"></i>
+                            <span>LAUNCH MISSION</span>
+                            <div class="btn-glow"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="game-overlay end-overlay" id="endScreen">
+                    <div class="overlay-content">
+                        <div class="result-icon" id="resultIcon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h2 class="result-title" id="resultTitle">MISSION COMPLETE</h2>
+                        <p class="result-message" id="resultMessage">You've successfully collected stellar energy!</p>
+                        
+                        <div class="result-stats">
+                            <div class="result-stat">
+                                <div class="stat-label">ENERGY COLLECTED</div>
+                                <div class="stat-value large">
+                                    <span id="finalScore">0</span><span>/10</span>
+                                </div>
+                            </div>
+                            <div class="result-stat">
+                                <div class="stat-label">TIME REMAINING</div>
+                                <div class="stat-value large">
+                                    <span id="finalTime">0</span><span>s</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="achievements">
+                            <div class="achievement" id="speedAchievement">
+                                <i class="fas fa-bolt"></i>
+                                <span>Speed Demon</span>
+                            </div>
+                            <div class="achievement" id="timeAchievement">
+                                <i class="fas fa-clock"></i>
+                                <span>Time Master</span>
+                            </div>
+                            <div class="achievement" id="perfectAchievement">
+                                <i class="fas fa-star"></i>
+                                <span>Perfect Run</span>
+                            </div>
+                        </div>
+
+                        <button class="restart-btn" id="restartButton">
+                            <i class="fas fa-redo"></i>
+                            <span>NEW MISSION</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <div class="touch-controls">
+                    <h3><i class="fas fa-mobile-alt"></i> TOUCH CONTROLS</h3>
+                    <div class="dpad-container">
+                        <div class="dpad">
+                            <div class="dpad-up" id="upBtn">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="dpad-center">
+                                <div class="dpad-left" id="leftBtn">
+                                    <i class="fas fa-arrow-left"></i>
+                                </div>
+                                <div class="dpad-middle"></div>
+                                <div class="dpad-right" id="rightBtn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            </div>
+                            <div class="dpad-down" id="downBtn">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn boost-btn" id="boostBtn">
+                            <i class="fas fa-bolt"></i>
+                            WARP BOOST
+                        </button>
+                        <button class="action-btn pause-btn" id="pauseBtn">
+                            <i class="fas fa-pause"></i>
+                            PAUSE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="game-info">
+                    <h3><i class="fas fa-info-circle"></i> MISSION LOG</h3>
+                    <div class="info-container">
+                        <div class="info-item">
+                            <i class="fas fa-star pulse"></i>
+                            <div class="info-content">
+                                <h4>Energy Stars</h4>
+                                <p>Collect all 10 stellar energy sources. Each star provides warp boost!</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="info-content">
+                                <h4>Time Management</h4>
+                                <p>Complete within 60 seconds for bonus achievements.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-bolt"></i>
+                            <div class="info-content">
+                                <h4>Warp Boost</h4>
+                                <p>Press SPACE or use boost button for temporary speed increase.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-sync-alt"></i>
+                            <div class="info-content">
+                                <h4>Restart Mission</h4>
+                                <p>Press R or use the New Mission button to restart.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="leaderboard">
+                        <h4>HIGH SCORE</h4>
+                        <div class="score-display">
+                            <span id="highScore">0</span>
+                            <span class="unit">/10 stars</span>
+                        </div>
+                        <div class="best-time">
+                            <i class="fas fa-crown"></i>
+                            <span>Best Time: <span id="bestTime">0</span>s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-footer">
+            <div class="footer-content">
+                <div class="credits">
+                    <i class="fas fa-code"></i>
+                    <span>Cosmic Collector v1.0 | Built for Space Exploration</span>
+                </div>
+                <div class="hint">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Tip: Chain star collections for speed bonuses!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
